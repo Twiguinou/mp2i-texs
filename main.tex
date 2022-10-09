@@ -1,0 +1,123 @@
+\documentclass[article,11pt]{article}
+\usepackage[a4paper,total={7in,10in}]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tkz-euclide}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage[math]{cellspace}
+\usepackage[french]{babel}
+\setlength{\cellspacetoplimit}{3pt}
+\setlength{\cellspacebottomlimit}{3pt}
+\definecolor{vlightgray}{rgb}{0.9,0.9,0.9}
+\usepackage[T1]{fontenc}
+\lstset{
+    backgroundcolor=\color{vlightgray},
+    commentstyle=\color{cyan},
+    stringstyle=\color{magenta},
+    language=C,
+    aboveskip=3mm,
+    belowskip=3mm,
+    literate=%
+        {~}{{$\sim$}}1
+        {û}{{\^u}}1
+        {à}{{\`a}}1
+        {é}{{\'e}}1
+        {è}{{\`e}}1,
+    showstringspaces=false,
+    showspaces=false,
+    showtabs=false,
+    captionpos=b,
+    keepspaces=true,
+    columns=fixed,
+    basicstyle=\footnotesize\ttfamily,
+    numbers=right,
+    numbersep=5pt,
+    numberstyle=\color{purple}\tiny,
+    breaklines=true,
+    breakatwhitespace=false,
+    tabsize=2
+}
+
+\newcommand{\eqencld}[1]{
+\begin{equation*}#1\end{equation*}
+}
+\newcommand{\bgp}[1]{
+\left(#1\right)
+}
+\newcommand{\bgbr}[1]{
+\left\{#1\right\}
+}
+\newcommand{\fabs}[1]{
+\left|#1\right|
+}
+
+\begin{document}
+
+\title{Solution de l'exercice dont je connais plus le numéro}
+\author{Akushiru - MP2I - Lycée Descartes}
+\maketitle
+
+\section{Développement pénible}
+
+\begin{enumerate}
+\item Visualisons les 3 cas possibles sachant que $z\neq0$ selon la base du triangle rectangle, $z$, $z^{2}$ et $z^{3}$:\\
+\newcommand{\maketrec}[3]{
+\begin{tikzpicture}[baseline=(current bounding box.center),xscale=-.8,yscale=-.8]
+\tkzDefPoint(0,0){A} \tkzDefPoint(4,0){B}
+\tkzDrawTriangle[pythagore](A,B)
+\tkzGetPoint{C}
+\tkzMarkRightAngle(A,B,C)
+\tkzDrawPoints(A,B,C)
+\tkzLabelPoint[below](A){#3}
+\tkzLabelPoint[below left](B){#1}
+\tkzLabelPoint[above left](C){#2}
+\end{tikzpicture}
+}
+\begin{enumerate}[label=-]
+\item Avec $z$ comme base du triangle:\maketrec{$z$}{$z^{2}$}{$z^{3}$}
+\item Avec $z^{2}$ comme base du triangle: \maketrec{$z^{2}$}{$z^{3}$}{$z$}
+\item Avec $z^{3}$ comme base du triangle: \maketrec{$z^{3}$}{$z$}{$z^{2}$}
+\end{enumerate}
+\item Pythagorisons chaque cas:
+\begin{enumerate}[label=-]
+\item Si le triangle est rectangle au point d'affixe $z$ alors:
+\eqencld{\fabs{z^{3}-z}^{2}+\fabs{z^{2}-z}^2=\fabs{z^{3}-z^{2}}^{2}}
+\eqencld{\fabs{z\bgp{z^{2}-1}}^{2}+\fabs{z\bgp{z-1}}^{2}=\fabs{z^{2}\bgp{z-1}}^{2}}
+\eqencld{\fabs{z}^{2}\fabs{z-1}^{2}\fabs{z+1}^{2}+\fabs{z}^{2}\fabs{z-1}^{2}=\fabs{z^{2}}^{2}\fabs{z-1}^{2}}
+\eqencld{\fabs{z}^{2}\fabs{z+1}^{2}+\fabs{z}^{2}=\fabs{z}^{4}}
+\eqencld{\fabs{z+1}^{2}+1=\fabs{z}^{2}}
+Avec $z=a+ib,\ \bgp{a,b}\in\mathbb{R}^{2}$:
+\eqencld{\fabs{a+ib+1}^{2}+1=\fabs{a+ib}^{2}}
+\eqencld{\bgp{a+1}^{2}+b^{2}+1=a^{2}+b^{2}}
+\eqencld{a^{2}+2a+2=a^{2}}
+\eqencld{a=-1}
+\item Si le triangle est rectangle au point d'affixe $z^{2}$ alors:
+\eqencld{\fabs{z-z^{2}}^{2}+\fabs{z^{2}-z^{3}}^{2}=\fabs{z-z^{3}}^{2}}
+\eqencld{\fabs{1-z}^{2}+\fabs{z}^{2}\fabs{1-z}^{2}=\fabs{1+z}^{2}\fabs{1-z}^{2}}
+\eqencld{1+\fabs{z}^{2}=\fabs{1+z}^{2}}
+\eqencld{1+a^{2}=a^{2}+2a+1}
+\eqencld{a=0} Donc $z$ est un imaginaire pur.
+\item Si le triangle est rectangle au point d'affixe $z^{3}$ alors:
+\eqencld{\fabs{z^{2}-z^{3}}^{2}+\fabs{z-z^{3}}^{2}=\fabs{z-z^{2}}^{2}}
+\eqencld{\fabs{z}^{2}\fabs{1-z}^{2}+\fabs{1-z}^{2}\fabs{1+z}^{2}=\fabs{1-z}^{2}}
+\eqencld{\fabs{z}^{2}+\fabs{1+z}^{2}=1}
+\eqencld{2a^{2}+2a+2b^{2}=0}
+\eqencld{a^{2}+a+b^{2}=0}
+Puis on applique on légère entourloupe.
+\eqencld{\bgp{a+\frac{1}{2}}^{2}-\frac{1}{4}+b^{2}=0}
+\eqencld{\bgp{a+\frac{1}{2}}^{2}+b^{2}=\bgp{\frac{1}{2}}^{2}}
+Bon bah ce bordel c'est une équation de cercle donc théoriquement l'ensemble des solutions c'est:
+\eqencld{\mathscr{C}\bgp{\bgp{-\frac{1}{2},\ 0};\ \frac{1}{2}}}
+\textsl{MAIS} il faut faire attention aux points interdits que sont $z=-1$ et $z=0$ ce qui nous donne finalement:
+\eqencld{\mathscr{C}\bgp{\bgp{-\frac{1}{2},\ 0};\ \frac{1}{2}}\setminus\bgbr{\bgp{0,\ 0};\ \bgp{-1,\ 0}}}
+\end{enumerate}
+\end{enumerate}
+
+\section{Conclusion}
+
+C'est trop chiant bordel.
+
+\end{document}
