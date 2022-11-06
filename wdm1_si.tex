@@ -1,0 +1,172 @@
+\documentclass[article,11pt]{article}
+\usepackage[a4paper,total={7in,10in}]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{esvect}
+\usepackage{siunitx}
+\usepackage{mathrsfs}
+\usepackage[math]{cellspace}
+\usepackage[french]{babel}
+\usepackage{pst-plot}
+\setlength{\cellspacetoplimit}{3pt}
+\setlength{\cellspacebottomlimit}{3pt}
+\definecolor{vlightgray}{rgb}{0.9,0.9,0.9}
+\usepackage[T1]{fontenc}
+\lstset{
+    backgroundcolor=\color{vlightgray},
+    commentstyle=\color{cyan},
+    stringstyle=\color{magenta},
+    language=C,
+    aboveskip=3mm,
+    belowskip=3mm,
+    literate=%
+        {~}{{$\sim$}}1
+        {û}{{\^u}}1
+        {à}{{\`a}}1
+        {é}{{\'e}}1
+        {è}{{\`e}}1,
+    showstringspaces=false,
+    showspaces=false,
+    showtabs=false,
+    captionpos=b,
+    keepspaces=true,
+    columns=fixed,
+    basicstyle=\footnotesize\ttfamily,
+    numbers=right,
+    numbersep=5pt,
+    numberstyle=\color{purple}\tiny,
+    breaklines=true,
+    breakatwhitespace=false,
+    tabsize=2
+}
+\allowdisplaybreaks
+
+\newcommand{\eqencld}[1]{
+    \begin{equation*}#1\end{equation*}
+}
+\newcommand{\bgp}[1]{
+    \left(#1\right)
+}
+\newcommand{\bgbr}[1]{
+    \left\{#1\right\}
+}
+\newcommand{\fabs}[1]{
+    \left|#1\right|
+}
+
+\begin{document}
+
+\title{Devoir Maison 1: robot SIRTES}
+\author{Aksil Mammar - MP2I - Lycée Descartes}
+\date{}
+\maketitle
+
+\begin{enumerate}
+\item La première figure plane comportera la description de la base 1 par rapport à la base 0, la seconde figure les descriptions de toutes les bases
+restantes 2, 3 et 4.
+\begin{center}
+\begin{tikzpicture}
+\def\radius{0.35cm}\def\commonarrowlength{8em}
+\node[label={[anchor=north,inner sep=\radius*2]north:$\overrightarrow{z_{0}}=\overrightarrow{z_{1}}$}](b1center) at(-4,-5) {};
+\node[label={[anchor=north,inner sep=\radius*2]north:$\overrightarrow{y_{1}}=\overrightarrow{y_{2}}=\overrightarrow{y_{3}}=\overrightarrow{y_{4}}$}](b2center) at(4,-5) {};
+\newcommand{\drawbasepair}[6]{
+    \draw[->,ultra thick,rotate around={15*#2:(#1)},#3] ($(#1)+(\radius,0)$) -- ++(\radius+\commonarrowlength,0)node[right]{#4};
+    \draw[->,ultra thick,rotate around={15*#2:(#1)},#3] ($(#1)+(0,\radius)$) -- ++(0,\radius+\commonarrowlength)node[left]{#5};
+    \ifnum #2>0\relax
+        \draw[->,ultra thick,rotate around={15*(#2-1):(#1)},#3] ($(#1)+(\commonarrowlength,0)$) arc (0:15:\commonarrowlength)node[midway,right]{#6};
+        \draw[->,ultra thick,rotate around={15*(#2-1):(#1)},#3] ($(#1)+(0,\commonarrowlength)$) arc (90:105:\commonarrowlength)node[midway,left,above]{#6};
+    \fi
+}
+\draw(b1center) circle[radius=\radius];\fill(b1center) circle[radius=3pt];
+\draw(b2center) circle[radius=\radius];\fill(b2center) circle[radius=3pt];
+\drawbasepair{b1center}{0}{black}{$\overrightarrow{x_{0}}$}{$\overrightarrow{y_{0}}$}{}
+\drawbasepair{b1center}{1}{blue}{$\overrightarrow{x_{1}}$}{$\overrightarrow{y_{1}}$}{$\alpha_{1}$}
+\drawbasepair{b2center}{0}{black}{$\overrightarrow{x_{1}}$}{$\overrightarrow{z_{1}}$}{}
+\drawbasepair{b2center}{1}{blue}{$\overrightarrow{x_{2}}$}{$\overrightarrow{z_{2}}$}{$\alpha_{2}$}
+\drawbasepair{b2center}{2}{red}{$\overrightarrow{x_{3}}$}{$\overrightarrow{z_{3}}$}{$\alpha_{3}$}
+\drawbasepair{b2center}{3}{green}{$\overrightarrow{x_{4}}$}{$\overrightarrow{z_{4}}$}{$\alpha_{4}$}
+\end{tikzpicture}
+\end{center}
+Les vecteurs instantanées de rotation sont les suivants:
+\eqencld{\vv{\Omega\bgp{1/0}}=\dot{\alpha_{1}}\vv{z_{0}}\quad \vv{\Omega\bgp{2/1}}=\dot{\alpha_{2}}\vv{y_{1}}\quad \vv{\Omega\bgp{3/2}}=\dot{\alpha_{3}}\vv{y_{1}}\quad \vv{\Omega\bgp{4/3}}=\dot{\alpha_{4}}\vv{y_{1}}}
+\item En utilisant la relation de Chasles:
+\begin{flalign*}
+&\begin{aligned}
+\vv{OP}&=\vv{OO_{1}}+\vv{O_{1}O_{2}}+\vv{O_{2}O_{3}}+\vv{O_{3}P}\\
+&=\fabs{\vv{OO_{1}}}\vv{z_{0}}+\fabs{\vv{O_{1}O_{2}}}\vv{x_{2}}+\fabs{\vv{O_{2}O_{3}}}\vv{x_{3}}+\fabs{\vv{O_{3}P}}\vv{x_{4}}\\
+&=L_{1}\vv{z_{0}}+L_{2}\vv{x_{2}}+L_{3}\vv{x_{3}}+L_{4}\vv{x_{4}}
+\end{aligned}&&
+\end{flalign*}
+\item Dérivons la formule précédemment acquise:
+\begin{flalign*}
+&\begin{aligned}
+\vv{V\bgp{P\in5/0}}=L_{1}\frac{d\vv{z_{0}}}{dt}\Bigr|_{B_{0}}+L_{2}\frac{d\vv{x_{2}}}{dt}\Bigr|_{B_{0}}+L_{3}\frac{d\vv{x_{3}}}{dt}\Bigr|_{B_{0}}+L_{4}\frac{d\vv{x_{4}}}{dt}\Bigr|_{B_{0}}
+\end{aligned}&&
+\end{flalign*}
+Or on sait que: $\displaystyle\frac{dz_{0}}{dt}\Bigr|_{B_{0}}=\vv{0}$, ainsi:
+\begin{flalign*}
+&\begin{aligned}
+\vv{V\bgp{P\in5/0}}&=L_{2}\frac{d\vv{x_{2}}}{dt}\Bigr|_{B_{0}}+L_{3}\frac{d\vv{x_{3}}}{dt}\Bigr|_{B_{0}}+L_{4}\frac{d\vv{x_{4}}}{dt}\Bigr|_{B_{0}}&&\\
+&=L_{2}\bgp{\frac{d\vv{x_{2}}}{dt}\Bigr|_{B_{2}}+\vv{\Omega\bgp{2/0}}\wedge\vv{x_{2}}}+L_{3}\bgp{\frac{d\vv{x_{3}}}{dt}\Bigr|_{B_{3}}+\vv{\Omega\bgp{3/0}}\wedge\vv{x_{3}}}+L_{4}\bgp{\frac{d\vv{x_{4}}}{dt}\Bigr|_{B_{4}}+\vv{\Omega\bgp{4/0}}\wedge\vv{x_{4}}}\\
+&=L_{2}\vv{\Omega\bgp{2/0}}\wedge\vv{x_{2}}+L_{3}\vv{\Omega\bgp{3/0}}\wedge\vv{x_{3}}+L_{4}\vv{\Omega\bgp{4/0}}\wedge\vv{x_{4}}\\
+&=L_{2}\bgp{\vv{\Omega\bgp{2/1}}+\vv{\Omega\bgp{1/0}}}\wedge\vv{x_{2}}+L_{3}\bgp{\vv{\Omega\bgp{3/2}}+\vv{\Omega\bgp{2/1}}+\vv{\Omega\bgp{1/0}}}\wedge\vv{x_{3}}\\
+&\quad+L_{4}\bgp{\vv{\Omega\bgp{4/3}}+\vv{\Omega\bgp{3/2}}+\vv{\Omega\bgp{2/1}}+\vv{\Omega\bgp{1/0}}}\wedge\vv{x_{4}}\\
+&=L_{2}\bgp{\dot{\alpha_{2}}\vv{y_{1}}+\dot{\alpha_{1}}\vv{z_{0}}}\wedge\vv{x_{2}}+L_{3}\bgp{\dot{\alpha_{3}}\vv{y_{1}}+\dot{\alpha_{2}}\vv{y_{1}}+\dot{\alpha_{1}}\vv{z_{0}}}\wedge\vv{x_{3}}+L_{4}\bgp{\dot{\alpha_{4}}\vv{y_{1}}+\dot{\alpha_{3}}\vv{y_{1}}+\dot{\alpha_{2}}\vv{y_{1}}+\dot{\alpha_{1}}\vv{z_{0}}}\wedge\vv{x_{4}}\\
+&=L_{2}\bgp{\dot{\alpha_{2}}\vv{y_{1}}+\dot{\alpha_{1}}\vv{z_{0}}}\wedge\vv{x_{2}}+L_{3}\bgp{\bgp{\dot{\alpha_{3}}+\dot{\alpha_{2}}}\vv{y_{1}}+\dot{\alpha_{1}}\vv{z_{0}}}\wedge\vv{x_{3}}+L_{4}\bgp{\bgp{\dot{\alpha_{2}}+\dot{\alpha_{3}}+\dot{\alpha_{4}}}\vv{y_{1}}+\dot{\alpha_{1}}\vv{z_{0}}}\wedge\vv{x_{4}}
+\end{aligned}&&
+\end{flalign*}
+% Probable page break.
+\begin{flalign*}
+&\begin{aligned}
+\hphantom{\vv{V\bgp{P\in5/0}}}&=L_{2}\bgp{\dot{\alpha_{1}}\vv{z_{1}}\wedge\vv{x_{2}}-\dot{\alpha_{2}}\vv{z_{2}}}+L_{3}\bgp{\dot{\alpha_{1}}\vv{z_{1}}\wedge\vv{x_{3}}-\bgp{\dot{\alpha_{3}}+\dot{\alpha_{2}}}\vv{z_{3}}}+L_{4}\bgp{\dot{\alpha_{1}}\vv{z_{1}}\wedge\vv{x_{4}}-\bgp{\dot{\alpha_{2}}+\dot{\alpha_{3}}+\dot{\alpha_{4}}}\vv{z_{4}}}\\
+&=L_{2}\bgp{\dot{\alpha_{1}}\cos\bgp{\alpha_{2}}\vv{y_{1}}-\dot{\alpha_{2}}\vv{z_{2}}}+L_{3}\bgp{\dot{\alpha_{1}}\cos\bgp{\alpha_{2}+\alpha_{3}}\vv{y_{1}}-\bgp{\dot{\alpha_{3}}+\dot{\alpha_{2}}}\vv{z_{3}}}\\
+&\quad+L_{4}\bgp{\dot{\alpha_{1}}\cos\bgp{\alpha_{2}+\alpha_{3}+\alpha_{4}}\vv{y_{1}}-\bgp{\dot{\alpha_{2}}+\dot{\alpha_{3}}+\dot{\alpha_{4}}}\vv{z_{4}}}\\
+&=\dot{\alpha_{1}}\bgp{L_{2}cos\bgp{\alpha_{2}}+L_{3}cos\bgp{\alpha_{2}+\alpha_{3}}+L_{4}cos\bgp{\alpha_{2}+\alpha_{3}+\alpha_{4}}}\vv{y_{1}}-L_{2}\dot{\alpha_{2}}\vv{z_{2}}-L_{3}\bgp{\dot{\alpha_{2}}+\dot{\alpha_{3}}}\vv{z_{3}}\\
+&\quad-L_{4}\bgp{\dot\alpha_{2}+\dot\alpha_{3}+\dot\alpha_{4}}\vv{z_{4}}
+\end{aligned}&&
+\end{flalign*}
+\item L'expression se simplifie grandement si $\alpha_{3}=\alpha_{4}=\dot{\alpha_{3}}=\dot{\alpha_{4}}=0$:
+\begin{flalign*}
+&\begin{aligned}
+\vv{V\bgp{P\in5/0}}&=\dot{\alpha_{1}}\bgp{L_{2}cos\bgp{\alpha_{2}}+L_{3}cos\bgp{\alpha_{2}}+L_{4}cos\bgp{\alpha_{2}}}\vv{y_{1}}-L_{2}\dot{\alpha_{2}}\vv{z_{2}}-L_{3}\dot{\alpha_{2}}\vv{z_{3}}-L_{4}\dot\alpha_{2}\vv{z_{4}}\\
+&=\dot{\alpha_{1}}\cos\bgp{\alpha_{2}}\bgp{L_{2}+L_{3}+L_{4}}\vv{y_{1}}-\dot{\alpha_{2}}\bgp{L_{2}\vv{z_{2}}+L_{3}\vv{z_{3}}+L_{4}\vv{z_{4}}}
+\end{aligned}&&
+\end{flalign*}
+Mais on sait que $L=L_{2}+L_{3}+L_{4}$ et que, par la simplification des angles, $\vv{z_{3}}=\vv{z_{4}}=\vv{z_{2}}$.
+\begin{flalign*}
+&\begin{aligned}
+\vv{V\bgp{P\in5/0}}&=L\dot{\alpha_{1}}\cos\bgp{\alpha_{2}}\vv{y_{1}}-L\dot{\alpha_{2}}\vv{z_{2}}\\
+&=L\bgp{\dot{\alpha_{1}}\cos\bgp{\alpha_{2}}\vv{y_{1}}-\dot{\alpha_{2}}\vv{z_{2}}}
+\end{aligned}&&
+\end{flalign*}
+\item Avec les mêmes simplification que précédemment, on dérive le vecteur vitesse:
+\begin{flalign*}
+&\begin{aligned}
+\vv{z_{0}}\cdot\vv{\Gamma\bgp{P\in5/0}}&=\vv{z_{0}}\cdot\frac{d\vv{V\bgp{P\in5/0}}}{dt}\Bigr|_{B_{0}}\\[5pt]
+&=\vv{z_{1}}\cdot\frac{dL\bgp{\dot{\alpha_{1}}\cos\bgp{\alpha_{2}}\vv{y_{1}}-\dot{\alpha_{2}}\vv{z_{2}}}}{dt}\Bigr|_{B_{0}}\\[5pt]
+&=L\vv{z_{1}}\cdot\bgp{\frac{d\dot{\alpha_{1}}\cos\bgp{\alpha_{2}}\vv{y_{1}}}{dt}\Bigr|_{B_{0}}-\frac{d{\dot\alpha_{2}}\vv{z_{2}}}{dt}\Bigr|_{B_{0}}}\\[5pt]
+&=-L\vv{z_{1}}\cdot\bgp{\ddot{\alpha_{2}}\vv{z_{2}}+\dot{\alpha_{2}}\frac{d\vv{z_{2}}}{dt}\Bigr|_{B_{0}}}\\[5pt]
+&=-L\vv{z_{1}}\cdot\bgp{\ddot{\alpha_{2}}\vv{z_{2}}+\dot{\alpha_{2}}\bgp{\frac{d\vv{z_{2}}}{dt}\Bigr|_{B_{2}}+\bgp{\vv{\Omega\bgp{2/1}}+\vv{\Omega\bgp{1/0}}}\wedge\vv{z_{2}}}}\\[5pt]
+&=-L\vv{z_{1}}\cdot\bgp{\ddot{\alpha_{2}}\vv{z_{2}}+\dot{\alpha_{2}}\bgp{\dot{\alpha_{2}}\vv{y_{1}}+\dot{\alpha_{1}}\vv{z_{0}}}\wedge\vv{z_{2}}}\\
+&=-L\vv{z_{1}}\cdot\bgp{\ddot{\alpha_{2}}\vv{z_{2}}+\dot{\alpha_{1}}\dot{\alpha_{2}}\vv{z_{1}}\wedge\vv{z_{2}}+\dot{\alpha_{2}}^{2}\vv{y_{1}}\wedge\vv{z_{2}}}\\
+&=-L\vv{z_{1}}\cdot\bgp{\ddot{\alpha_{2}}\vv{z_{2}}+\dot{\alpha_{1}}\dot{\alpha_{2}}\sin\bgp{\alpha_{2}}\vv{y_{1}}+\dot{\alpha_{2}}^{2}\vv{x_{2}}}\\[5pt]
+&=-L\bgp{\ddot{\alpha_{2}}\cos\bgp{\alpha_{2}}+\dot{\alpha_{2}}^{2}\cos\bgp{\dfrac{\pi}{2}-\alpha_{2}}}\\[5pt]
+&=-L\bgp{\ddot{\alpha_{2}}\cos\bgp{\alpha_{2}}+\dot{\alpha_{2}}^{2}\sin\bgp{\alpha_{2}}}
+\end{aligned}&&
+\end{flalign*}
+\item Si on considére $L=\SI{1,2}{\meter}$ alors $\vv{z_{0}}\cdot\vv{\Gamma\bgp{P\in5/0}}=-1{,}2\bgp{\ddot{\alpha_{2}}\cos\bgp{\alpha_{2}}+\dot{\alpha_{2}}^{2}\sin\bgp{\alpha_{2}}}$
+\eqencld{\fabs{\vv{z_{0}}\cdot\vv{\Gamma\bgp{P\in5/0}}}<3g}
+\eqencld{\iff\bgp{\vv{z_{0}}\cdot\vv{\Gamma\bgp{P\in5/0}}}^{2}<9g^{2}}
+\eqencld{\iff\bgp{-1{,}2\bgp{\ddot{\alpha_{2}}\cos\bgp{\alpha_{2}}+\dot{\alpha_{2}}^{2}\sin\bgp{\alpha_{2}}}}^{2}<9g^{2}}
+\eqencld{\iff1.44\bgp{\ddot{\alpha_{2}}\cos\bgp{\alpha_{2}}+\dot{\alpha_{2}}^{2}\sin\bgp{\alpha_{2}}}^{2}<300}
+\eqencld{\iff\bgp{\ddot{\alpha_{2}}\cos\bgp{\alpha_{2}}+\dot{\alpha_{2}}^{2}\sin\bgp{\alpha_{2}}}^{2}<208{,}3}
+Avec $\dot{\alpha_{2}}=0$ donc:
+\eqencld{\iff\ddot{\alpha_{2}}^{2}\cos\bgp{\alpha_{2}}^{2}<208{,}3}
+\end{enumerate}
+
+\end{document}
