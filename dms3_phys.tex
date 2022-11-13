@@ -1,0 +1,120 @@
+\documentclass[article,11pt]{article}
+\usepackage[a4paper,total={7in,10in}]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[europeanresistors]{circuitikz}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,},locale=FR}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage[math]{cellspace}
+\usepackage[french]{babel}
+\setlength{\cellspacetoplimit}{3pt}
+\setlength{\cellspacebottomlimit}{3pt}
+\definecolor{vlightgray}{rgb}{0.9,0.9,0.9}
+\usepackage[T1]{fontenc}
+\lstset{
+    backgroundcolor=\color{vlightgray},
+    commentstyle=\color{cyan},
+    stringstyle=\color{magenta},
+    language=C,
+    aboveskip=3mm,
+    belowskip=3mm,
+    literate=%
+        {~}{{$\sim$}}1
+        {û}{{\^u}}1
+        {à}{{\`a}}1
+        {é}{{\'e}}1
+        {è}{{\`e}}1,
+    showstringspaces=false,
+    showspaces=false,
+    showtabs=false,
+    captionpos=b,
+    keepspaces=true,
+    columns=fixed,
+    basicstyle=\footnotesize\ttfamily,
+    numbers=right,
+    numbersep=5pt,
+    numberstyle=\color{purple}\tiny,
+    breaklines=true,
+    breakatwhitespace=false,
+    tabsize=2
+}
+
+\newcommand{\eqencld}[1]{
+    \begin{equation*}#1\end{equation*}
+}
+\newcommand{\bgp}[1]{
+    \left(#1\right)
+}
+\newcommand{\bgbr}[1]{
+    \left\{#1\right\}
+}
+\newcommand{\fabs}[1]{
+    \left|#1\right|
+}
+
+\begin{document}
+
+\title{Devoir Maison 5: Exercice 3 - Signal apériodique}
+\author{Aksil Mammar - MP2I - Lycée Descartes}
+\date{}
+\maketitle
+
+\begin{enumerate}
+\item En $t=0^{+}$ on a $U_{C}\bgp{0^{+}}=U_{C}\bgp{0^{-}}=\SI{1}{\volt}$ et $i\bgp{0^{+}}=C\dfrac{dU_{C}}{dt}\bgp{0^{-}}=\SI{0}{\ampere}$ par principe de continuité du condensateur.
+\item En régime permanent, c'est-à-dire en $t\longrightarrow+\infty$, $U_{C}\bgp{+\infty}=0$ et $i\bgp{+\infty}=C\dfrac{dU_{C}}{dt}=0$
+\item La loi des mailles nous donne l'équation suivante.
+\eqencld{U_{C}+U_{R}+U_{L}=0}
+\eqencld{\dfrac{q}{C}+Ri\bgp{t}+L\dfrac{di}{dt}\bgp{t}=0}
+\eqencld{\dfrac{1}{C}i\bgp{t}+R\dfrac{di}{dt}\bgp{t}+L\dfrac{d^{2}i}{dt^{2}}\bgp{t}=0}
+\eqencld{\dfrac{d^{2}i}{dt^{2}}\bgp{t}+\dfrac{R}{L}\dfrac{di}{dt}\bgp{t}+\dfrac{1}{LC}i\bgp{t}=0}
+Puis on considère $\omega_{0}=\dfrac{1}{\sqrt{LC}}$, $Q=\dfrac{1}{R}\sqrt{\dfrac{L}{C}}$ et $\lambda=\dfrac{\omega_{0}}{2Q}$:
+\eqencld{\dfrac{d^{2}i}{dt^{2}}\bgp{t}+2\lambda\dfrac{di}{dt}\bgp{t}+\omega^{2}_{0}i\bgp{t}=0\ \bgp{E}}
+On calcule $\lambda$ et $\omega_{0}$ à l'aide de $R=\SI{6000}{\ohm}$, $C=\SI{1e-7}{\farad}$ et $L=\SI{0.0015}{\henry}$:\\
+$\omega_{0}=\dfrac{1}{\sqrt{LC}}\approx\SI{81649{,}65}{\radian\per\second}$, $Q\approx0{,}0204$ et $\lambda=\dfrac{\omega_{0}}{2Q}=\dfrac{R}{2L}=\SI{2e6}{\per\second}$.\\
+Puis l'équation caractéristique de $\bgp{E}$ est la suivante:
+\eqencld{\alpha^{2}+2\lambda\alpha+\omega^{2}_{0}=0\ \bgp{E_{c}}}
+Dont le discrimant est $\Delta=4\lambda^{2}-4\omega^{2}_{0},\ \sqrt{\Delta}=2\sqrt{\lambda^{2}-\omega^{2}_{0}}$, on remarque ainsi que, puisque
+$\lambda>\omega_{0}$, la racine du discriminant est réelle.
+\eqencld{\lambda>\omega_{0}\iff\dfrac{\omega_{0}}{2Q}>\omega_{0}\iff Q<\cfrac{1}{2}}
+Le régime est donc apériodique puisque $Q=0{,}0204$ satisfait la condition précédente.
+\item Les deux solutions $\alpha_{1}$ et $\alpha_{2}$ de $\bgp{E_{c}}$ s'expriment par:
+\eqencld{\alpha_{1}=-\lambda+\sqrt{\lambda^{2}-\omega^{2}_{0}}\ \text{ et }\ \alpha_{2}=-\lambda-\sqrt{\lambda^{2}-\omega^{2}_{0}}}
+Donc la solution générale de $\bgp{E}$ est:
+\begin{flalign*}
+\begin{aligned}
+i\bgp{t}&=Ae^{\alpha_{1}t}+Be^{\alpha_{2}t},\ \bgp{A,B}\in\mathbb{R}^{2}\\
+&=Ae^{\bgp{-\lambda+\sqrt{\lambda^{2}-\omega^{2}_{0}}}t}+Be^{\bgp{-\lambda-\sqrt{\lambda^{2}-\omega^{2}_{0}}}t}
+\end{aligned}
+\end{flalign*}
+Pour des valeurs réalistes de $A$ et $B$, la courbe serait la suivante:\\[2em]
+\pgfmathsetseed{\number\randomseed}
+\begin{tikzpicture}
+\pgfmathsetmacro{\fsola}{-3.1}
+\pgfmathsetmacro{\fsolb}{-2.1}
+\pgfmathsetmacro{\constantA}{0.5}
+\begin{axis}[xlabel={$t$},ylabel={$i\bgp{t}$},ticks=none,domain=0:9]
+\addplot[mark=none,samples=200]{\constantA * exp(\fsola * x) - \constantA * exp(\fsolb * x)};
+\end{axis}
+\end{tikzpicture}
+\item On sait que $i\bgp{0}=A+B=0$ donc $B=-A$.
+\eqencld{i\bgp{t}=A\bgp{e^{\bgp{-\lambda+\sqrt{\lambda^{2}-\omega^{2}_{0}}}t}-e^{\bgp{-\lambda-\sqrt{\lambda^{2}-\omega^{2}_{0}}}t}},\ A\in\mathbb{R}}
+Or avec l'inductance: $L\dfrac{di}{dt}\bgp{0}=-U_{0}\iff\dfrac{di}{dt}\bgp{0}=-\dfrac{U_{0}}{L}$
+\eqencld{\dfrac{di}{dt}\bgp{t}=A\bgp{\bgp{-\lambda+\sqrt{\lambda^{2}-\omega^{2}_{0}}}e^{\bgp{-\lambda+\sqrt{\lambda^{2}-\omega^{2}_{0}}}t}-\bgp{-\lambda-\sqrt{\lambda^{2}-\omega^{2}_{0}}}e^{\bgp{-\lambda-\sqrt{\lambda^{2}-\omega^{2}_{0}}}t}}}
+Donc les conditions initiales nous donnent:
+\begin{flalign*}
+&\begin{aligned}
+\dfrac{di}{dt}\bgp{0}&=A\bgp{\bgp{-\lambda+\sqrt{\lambda^{2}-\omega^{2}_{0}}}+\bgp{\lambda+\sqrt{\lambda^{2}-\omega^{2}_{0}}}}\\
+&=2A\sqrt{\lambda^{2}-\omega^{2}_{0}}=-\dfrac{U_{0}}{L}
+\end{aligned}&&
+\end{flalign*}
+\eqencld{A=-\dfrac{U_{0}}{2L\sqrt{\lambda^{2}-\omega^{2}_{0}}}}
+D'où l'expression finale de $i$:
+\eqencld{i\bgp{t}=\dfrac{U_{0}}{2L\sqrt{\lambda^{2}-\omega^{2}_{0}}}\bgp{e^{\bgp{-\lambda+\sqrt{\lambda^{2}-\omega^{2}_{0}}}t}-e^{\bgp{-\lambda-\sqrt{\lambda^{2}-\omega^{2}_{0}}}t}}}
+\end{enumerate}
+
+\end{document}
