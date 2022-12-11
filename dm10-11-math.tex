@@ -1,0 +1,108 @@
+\documentclass[article,11pt]{article}
+\usepackage[a4paper,total={7in,10in}]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\usepackage{amsmath}
+\usepackage{bbold}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{parskip}
+\usepackage[math]{cellspace}
+\usepackage[french]{babel}
+\setlength{\cellspacetoplimit}{3pt}
+\setlength{\cellspacebottomlimit}{3pt}
+\definecolor{vlightgray}{rgb}{0.9,0.9,0.9}
+\usepackage[T1]{fontenc}
+
+\DeclareMathSymbol{\shortminus}{\mathbin}{AMSa}{"39}
+\newcommand{\eqencld}[1]{
+    \begin{equation*}#1\end{equation*}
+}
+\newcommand{\bgp}[1]{
+    \left(#1\right)
+}
+\newcommand{\bgbr}[1]{
+    \left\{#1\right\}
+}
+\newcommand{\fabs}[1]{
+    \left|#1\right|
+}
+
+\begin{document}
+
+\title{Devoir Maison 10 : structures algébriques\vspace{-.5em}}
+\author{Anne-Cécile Poisot\\Aksil Mammar\vspace{-.5em}}
+\maketitle
+
+\section{Exercice 1}
+
+\begin{enumerate}
+\item\begin{enumerate}\item\begin{enumerate}[label=-]
+\item$\bgp{\mathbb{N},+}$ n'est pas un groupe, seul $0$ est symétrisable dans $\mathbb{N}$.
+\item$\bgp{\mathbb{Z},+}$ est un groupe de référence, de même, $\mathbb{Z}\subset\mathbb{R}$, donc $\bgp{\mathbb{Z},+}$ est un sous-groupe de $\bgp{\mathbb{R},+}$.
+\item On peut caractériser l'ensemble des rationnels de la manière suivante: $\mathbb{Q}=\bgbr{\dfrac{a}{b},\ (a,b)\in\mathbb{Z}\times\mathbb{N}\strut^{*}}$.\\
+Ainsi, pour tout $x\in\mathbb{Q}$ il existe $(a,b)\in\mathbb{Z}\times\mathbb{N}\strut^{*}$ tel que $x=\dfrac{a}{b}$, en cherchant le symétrique de $x$ par $+$, on a $x^{-1}=-x=\dfrac{-a}{b},\ -a\in\mathbb{Z}$ donc $x^{-1}\in\mathbb{Q}$.\\[.3em]
+Avec le même $x$ que précédemment, pour tout $y\in\mathbb{Q},\ y=\dfrac{c}{d},\ (c,d)\in\mathbb{Z}\times\mathbb{N}\strut^{*}$:\\
+$x+y=\dfrac{a}{b}+\dfrac{c}{d}=\dfrac{ad+cb}{bd}\in\mathbb{Q}$, donc $x+y\in\mathbb{Q}$ et $+$ est une lci pour $\mathbb{Q}$.\\[.5em]
+On peut finir par dire que $0\in\mathbb{Q}$, ainsi, $\bgp{\mathbb{Q},+}$ est un sous-groupe de $\bgp{\mathbb{R},+}$.
+\end{enumerate}
+\item On pose $d$ un réel quelconque.\\[.3em]
+$d\cdot 0=0\in d\mathbb{Z}$, l'élément neutre de $(\mathbb{R},+)$ est dans $d\mathbb{Z}$.\\[.5em]
+Soit $k_{1},k_{2}\in\mathbb{Z},\ dk_{1}+dk_{2}=d(k_{1}+k_{2})\in d\mathbb{Z}$, donc $+$ est une lci pour $\mathbb{Z}$.\\[.5em]
+Pour tout $k\in\mathbb{Z},\ dk^{-1}=d(-k)$, tout élément de $d\mathbb{Z}$ est symétrisable.\\[.3em]
+$d\mathbb{Z}$ est un sous-groupe de $\bgp{\mathbb{R},+}$.
+\item Soit $p,q\in\mathbb{Z}$.\\[.3em]
+$p^{-1}=-p-q\sqrt{2}$, le symétrique est bien dans l'ensemble voulu.\\[.5em]
+Soit $p',q'\in\mathbb{Z},\ p+q\sqrt{2}+p'+q'\sqrt{2}=p+p'+(q+q')\sqrt{2}$, ce qui fait de $+$ une lci.\\[.5em]
+Puisque $0\in\bgbr{p+q\sqrt{2},\ (p,q)\in\mathbb{Z}^{2}}$, alors c'est bien un sous-groupe de $\bgp{\mathbb{R},+}$.
+\end{enumerate}
+\item$G\neq\emptyset,\ G\neq\bgbr{0}$ et $G\subset\mathbb{R}$, on veut montrer que $G\cap\mathopen]0,+\infty\mathclose[\neq\emptyset$.\\
+On choisit $g\in G,\ g\neq 0$:
+\begin{enumerate}[label=-]
+\item Si $g\in\mathbb{R}\strut^{*}_{+}$ alors on a bien le but.
+\item Sinon, on a $g\in\mathbb{R}\strut^{*}_{\shortminus}$, cependant $G$ est un sous-groupe de $\bgp{\mathbb{R},+}$ donc g possède un symétrique noté $g^{-1}=-g\in G$, mais $-g\in\mathbb{R}\strut^{*}_{+}$.
+\end{enumerate}
+Ainsi, on a bien montré que $G\strut^{+}=G\cap\mathbb{R}\strut^{\ast}_{+}\neq\emptyset$.\\[.3em]
+$G\strut^{+}$ est une partie minorée de $\mathbb{R}$, $0$ est un minorant de $G\strut^{+}$, elle admet donc une borne inférieure dans $\mathbb{R}\strut^{*}_{+}$ que l'on note $d$.
+\item\begin{enumerate}
+\item Sachant que $d=\inf(G\strut^{+})$, on procède par l'absurde, en supposant que $d\notin G$.\\[.3em]
+$d\notin G$ donc $d+d=2d\notin G$, on choisit alors $v\in G\strut^{+}$ tel que $d<v<2d$, on utilise ensuite les propriétés de la borne inférieure:\\[.3em]
+Puisqu'il n'existe pas d'élément plus petit dans $G\strut^{+}$, il existe $u\in G\strut^{+},\ d<u<v<2d$.\\
+On pose ensuite $\varepsilon=v-u$.\\
+La situation se représente avec le schéma suivant:\vspace{.8em}
+\begin{center}\begin{tikzpicture}
+\coordinate (d) at (2.5,0);\coordinate (u) at (3.3,0);\coordinate (v) at (4.2,0);
+\draw[thick] (0,.2) -- (0,-.2);\node at (0,-.4) {$0$};
+\draw ($(v)-(u)+(0,.15)$) -- ($(v)-(u)-(0,.15)$);\node at ($(v)-(u)-(0,.4)$) {$\varepsilon$};
+\draw ($(d)+(0,.15)$) -- ($(d)+(0,-.15)$);\node at ($(d)-(0,.4)$) {$d$};
+\draw ($(u)+(0,.15)$) -- ($(u)+(0,-.15)$);\node at ($(u)-(0,.4)$) {$u$};
+\draw ($(v)+(0,.15)$) -- ($(v)+(0,-.15)$);\node at ($(v)-(0,.4)$) {$v$};
+\draw ($(d)+(d)+(0,.15)$) -- ($(d)+(d)+(0,-.15)$);\node at ($(d)+(d)-(0,.4)$) {$2d$};
+\draw[thick,->] (0,0) -- ($(d)+(d)+(1.5,0)$);
+\draw[thick,<->] ($(u)+(0,.4)$) -- ($(v)+(0,.4)$);\node at ($(u)!.5!(v)+(0,.6)$) {$\varepsilon$};
+\end{tikzpicture}\end{center}
+Puis avec $\varepsilon=v-u$ on obtient $v=u+\varepsilon$, donc $\varepsilon\in G$.\\[.3em]
+On sait donc: $\varepsilon\in G$ et $\varepsilon\in\mathopen]0,d\mathclose[$, ce qui est absurde.\\[.3em]
+Puisque l'hypothèse initiale est absurde, on en déduit que $d\in G$.
+\item On a obtenu $d=\inf(G\strut^{+})$, donc $d^{-1}=-d=\sup\bgp{G\cap\mathbb{R}\strut^{*}_{-}}$.\\[.3em]
+Du fait de la loi $+$ on a $\forall n\in G,\ \exists k\in\mathbb{Z},\ n=dk$.
+Donc $G=\bgbr{dk,\ k\in\mathbb{Z}}=d\mathbb{Z}$.
+\end{enumerate}
+\item\begin{enumerate}
+\item$\mathbb{Q}$ suit cette définition, on a prouvé prédédemment que $\mathbb{Q}$ était bien un sous-groupe de $\bgp{\mathbb{R},+}$.\\[.3em]
+On pourrait ensuite expliciter une suite $\bgp{u_{n}}_{n\in\mathbb{N}^{*}}$ à valeurs dans $\mathbb{Q}$:\\$u_{n}=\dfrac{1}{n}$, ainsi on aurait $\lim u_{n}\xrightarrow[n\rightarrow+\infty]{} 0$.
+\item\begin{enumerate}[label=-]
+\item La propriété de la borne inférieure s'applique alors à $G\strut^{+}$ du fait que $\bgp{\mathbb{R}\strut^{*}_{+},<}$ est bien fondé:
+\eqencld{\forall x\in G\strut^{+},\ \exists y\in G\strut^{+},\ 0<y<x}
+du fait qu'il n'existe pas de minimum dans $G\strut^{+}$.\\[.3em]
+Soit $(x,y)\in\mathbb{R}^{2},\ x<y\implies 0<y-x$, grâce à la propriété précédente on peut alors prendre $a$ dans $G\strut^{+}$ tel que $0<a<y-x$.
+\item
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,106 @@
+\documentclass[article,11pt]{article}
+\usepackage[a4paper,total={7in,10in}]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[europeanresistors]{circuitikz}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,},locale=FR}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{parskip}
+\usepackage{accents}
+\usepackage[math]{cellspace}
+\usepackage[french]{babel}
+\setlength{\cellspacetoplimit}{3pt}
+\setlength{\cellspacebottomlimit}{3pt}
+\definecolor{vlightgray}{rgb}{0.9,0.9,0.9}
+\usepackage[T1]{fontenc}
+\lstset{
+    backgroundcolor=\color{vlightgray},
+    commentstyle=\color{cyan},
+    stringstyle=\color{magenta},
+    language=C,
+    aboveskip=3mm,
+    belowskip=3mm,
+    literate=%
+        {~}{{$\sim$}}1
+        {û}{{\^u}}1
+        {à}{{\`a}}1
+        {é}{{\'e}}1
+        {è}{{\`e}}1,
+    showstringspaces=false,
+    showspaces=false,
+    showtabs=false,
+    captionpos=b,
+    keepspaces=true,
+    columns=fixed,
+    basicstyle=\footnotesize\ttfamily,
+    numbers=right,
+    numbersep=5pt,
+    numberstyle=\color{purple}\tiny,
+    breaklines=true,
+    breakatwhitespace=false,
+    tabsize=2
+}
+
+\newcommand{\eqencld}[1]{
+    \begin{equation*}#1\end{equation*}
+}
+\newcommand{\bgp}[1]{
+    \left(#1\right)
+}
+\newcommand{\bgbr}[1]{
+    \left\{#1\right\}
+}
+\newcommand{\fabs}[1]{
+    \left|#1\right|
+}
+
+\begin{document}
+
+\textbf{\NoAutoSpacing Exercice 1:} Étude d'un filtre RL
+\begin{enumerate}
+\item\noindent\begin{enumerate}[label=-]
+\item À basse fréquence la bobine est équivalente à un fil.
+\item À haute fréquence la bobine est équivalente à un interrupteur ouvert, ainsi la tension $u_{s}$ est nulle.
+\end{enumerate}
+\item La formule pour la fonction de transfert est $H=\dfrac{u_{s}}{u_{e}}$, en impédance complexe $\underaccent{\bar}{H}=\dfrac{\underaccent{\bar}{u}_{s}}{\underaccent{\bar}{u}_{e}}$.
+En utilisant un pont diviseur de tension on obtient;
+\begin{flalign*}
+&\begin{aligned}
+\underaccent{\bar}{H}&=\dfrac{1}{\underaccent{\bar}{u}_{e}}\cdot{\underaccent{\bar}{u}_{e}}\cdot\dfrac{z_{R}}{z_{R}+z_{L}}\\
+&=\dfrac{R}{R+jL\omega}\\
+&=\dfrac{1}{1+j\frac{L}{R}\omega}\quad\text{on pose }\left\{\begin{aligned}
+&H_{0}=1\\
+&\omega_{c}=\dfrac{R}{L}
+\end{aligned}\right.\quad\text{ou bien }\left\{\begin{aligned}
+&H_{0}=1\\
+&x=\dfrac{L}{R}\omega
+\end{aligned}\right.\quad\text{pour la forme canonique j'ai pas bien compris.}\\
+&=\dfrac{1}{1+j\frac{\omega}{\omega_{c}}}
+\end{aligned}&&
+\end{flalign*}
+Puis on peut déterminer le gain $H(\omega)$:
+\begin{flalign*}
+&\begin{aligned}
+H(\omega)&=\fabs{\underaccent{\bar}{H}}\\
+&=\fabs{\dfrac{1}{1+j\frac{\omega}{\omega_{c}}}}\\
+&=\dfrac{1}{\fabs{1+j\frac{\omega}{\omega_{c}}}}\\
+&=\dfrac{1}{\sqrt{1+\bgp{\frac{\omega}{\omega_{c}}}^{2}}}
+\end{aligned}&&
+\end{flalign*}
+\begin{tabular}{|c|c|c|c|}
+\hline $x=\frac{\omega}{\omega_{c}}$ & $x\xrightarrow[\text{\tiny (B.F)}]{} 0$ & $x\xrightarrow[\text{\tiny (H.F)}]{}+\infty$ & $x=1$\\
+\hline $\underaccent{\bar}{H}$ & $1$ & $0$ & $\frac{1}{\sqrt{2}}e^{-i\frac{\pi}{4}}$\\
+\hline $H(\omega)$ & $1$ & $0$ & $\frac{1}{\sqrt{2}}$\\
+\hline $\varPhi_{s/e}=\arg(\underaccent{\bar}{H})$ & $0$ & $-\frac{\pi}{2}$ & $-\frac{\pi}{4}$\\
+\hline $G_{\SI{}{\decibel}}=20\log(H)$ & $0$ & $0$ & $20\cdot\log(H_{\max})-\SI{3}{\decibel}$\\
+\hline
+\end{tabular}\\[2em]
+\item
+\end{enumerate}
+
+\end{document}
