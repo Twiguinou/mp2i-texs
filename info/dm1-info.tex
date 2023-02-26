@@ -1,0 +1,536 @@
+\documentclass[article,11pt]{article}
+\usepackage[a4paper,total={7in,10in}]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{calc,arrows.meta,shapes.geometric,fit,matrix,positioning}
+\usepackage{amsmath}
+\usepackage{bbold}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{parskip}
+\usepackage[math]{cellspace}
+\usepackage[french]{babel}
+\setlength{\cellspacetoplimit}{3pt}
+\setlength{\cellspacebottomlimit}{3pt}
+\definecolor{vlightgray}{rgb}{0.9,0.9,0.9}
+\usepackage[T1]{fontenc}
+\usepackage{minted}
+\usepackage{textcomp}
+\usepackage[scaled]{beramono}
+
+\DeclareMathSymbol{\shortminus}{\mathbin}{AMSa}{"39}
+\newcommand{\eqencld}[1]{
+    \begin{equation*}#1\end{equation*}
+}
+\newcommand{\bgp}[1]{
+    \left(#1\right)
+}
+\newcommand{\bgbr}[1]{
+    \left\{#1\right\}
+}
+\newcommand{\fabs}[1]{
+    \left|#1\right|
+}
+
+\begin{document}
+
+\title{Devoir Maison 1 : Arbres AVL\vspace{-.75em}}
+\author{Aksil Mammar}
+\date{}
+\maketitle
+
+\section{Vérification du caractère AVL d'un arbre}
+
+Dans tout l'exercice on pose $n$ le nombre de noeuds de l'arbre étudié.
+
+\begin{enumerate}
+\item Il s'agit d'un parcours infixe, on remarque que la concaténation dans la liste se fait toujours à gauche de la liste générée précédemment.\\
+On pourrait donc la renommer \textsl{\textbf{parcours\_infixe}} par exemple.
+\item Cette fonction a une complexité en $O(n)$, donc linéaire.
+L'avantage de cette méthode vient du fait que l'on concatène des éléments au début d'une liste immuable, et donc que l'ajout de fait en temps constant.
+\item Puisque le parcours infixe parcourt successivement le fils gauche, la racine puis le fils droit, il suffit de s'assurer que la liste en sortie est rangée dans l'ordre croissant.
+\inputminted[fontsize=\small,firstline=7,lastline=12]{ocaml}{part1.ml}
+\item La fonction précédente compare toutes les paires d'éléments successives de la liste, si cet arbre n'est pas vide alors ces paires sont au nombre de $n-1$.
+Donc cet algorithme est aussi en $O(n)$.
+\item On propose une fonction qui vérifie à la fois que l'arbre est équilibré et que les étiquettes sont les bonnes.
+\inputminted[fontsize=\small,firstline=13,lastline=23]{ocaml}{part1.ml}
+\item Utilisons les deux fonctions précédentes.
+\inputminted[fontsize=\small,firstline=24,lastline=24]{ocaml}{part1.ml}
+\end{enumerate}
+
+\section{Les arbres AVL sont équilibrés}
+
+\begin{enumerate}
+\setcounter{enumi}{6}
+\item Soit $n\in\mathbb{N}$, on cherche en fait à résoudre l'équation suivante: $F_{n+2}-F_{n+1}-F_{n}=0\ (E)$.\\
+Supposons qu'il existe $(\lambda,\mu,r_{1},r_{2})\in\mathbb{R}^{4}$ tel que $F_{n}=\lambda r^{n}_{1}+\mu r^{n}_{2}$.\\
+$(E)$ peut ainsi être reformulée grâce à la nouvelle expression:
+\begin{flalign*}
+&\begin{aligned}
+(E)&\iff \lambda r^{n+2}_{1}+\mu r^{n+2}_{2} - \lambda r^{n+1}_{1}-\mu r^{n+1}_{2} - \lambda r^{n}_{1}-\mu r^{n}_{2}=0\\
+&\iff \lambda\bgp{r^{n+2}_{1}-r^{n+1}_{1}-r^{n}_{1}}+\mu\bgp{r^{n+2}_{2}-r^{n+1}_{2}-r^{n}_{2}}=0
+\end{aligned}&&
+\end{flalign*}
+Supposons alors que $\left\{
+\begin{tabular}{@{}l@{}}
+$r^{n+2}_{1}-r^{n+1}_{1}-r^{n}_{1}=0$\\
+$r^{n+2}_{2}-r^{n+1}_{2}-r^{n}_{2}=0$
+\end{tabular}
+\right.$\\[1em]
+On peut déjà expliciter $r_{1}$ et $r_{2}$ simplement, soit $r\in\mathbb{R}$:
+\begin{flalign*}
+&\begin{aligned}
+r^{n+2}-r^{n+1}-r^{n}=0&\iff r^{2}-r-1=0\\
+&\iff r=\dfrac{1\pm\sqrt{5}}{2}
+\end{aligned}&&
+\end{flalign*}
+Donc $r_{1}=\dfrac{1+\sqrt{5}}{2}$ et $r_{2}=\dfrac{1-\sqrt{5}}{2}$, et ainsi $F_{n}=\lambda\bgp{\dfrac{1+\sqrt{5}}{2}}^{n}+\mu\bgp{\dfrac{1-\sqrt{5}}{2}}^{n}$.
+Puis, il vient que:
+\begin{enumerate}[label=-]
+\item$F_{0}=\lambda+\mu=0\implies\mu=-\lambda$
+\item$F_{1}=\lambda\dfrac{1+\sqrt{5}}{2}+\mu\dfrac{1-\sqrt{5}}{2}=\lambda\sqrt{5}=1\implies\bgp{\lambda=\dfrac{1}{\sqrt{5}}\wedge\mu=-\dfrac{1}{\sqrt{5}}}$
+\end{enumerate}
+Pour conclure, $\forall n\in\mathbb{N},\ F_{n}=\dfrac{1}{\sqrt{5}}\left[\bgp{\dfrac{1+\sqrt{5}}{2}}^{n}-\bgp{\dfrac{1-\sqrt{5}}{2}}^{n}\right]$.
+\item Pour la preuve on pose pour tout arbre $A$ deux fonctions: $h(A)$ sa hauteur et $n(A)$ sa taille.\\[.7em]
+Soit $t$ un arbre AVL supposé minimal, par induction on va montrer que:
+\eqencld{n(t)=F_{h(t)+3}-1}
+\textsl{\textcolor{blue}{\underline{Initialisation}:}}
+\begin{enumerate}[label=-]
+\item Si $h(t)=-1$ alors $n(t)=0=F_{2}-1$.
+\item Si $h(t)=0$ alors $n(t)=1=F_{3}-1$.
+\end{enumerate}
+\textsl{\textcolor{blue}{\underline{Induction}:}}\\
+On suppose désormais que $h(t)>0$, $t$ est un AVL donc il possède deux fils, un gauche $g$ et un droite $d$, au moins un des deux fils est non vide.
+
+\begin{center}
+\begin{tikzpicture}[
+inner/.style={circle,draw,minimum width=6mm,inner sep=0},
+level 1/.style={sibling distance=25mm}
+]
+\node[inner] {t}
+child {
+    node[inner] {g}
+}
+child {
+    node[inner] {d}
+};
+\end{tikzpicture}
+\end{center}
+Puisque $t$ est un arbre AVL minimal, alors $\fabs{h(d)-h(g)}=1$, quitte à intervertir les rôles de $g$ et $d$ on choisit $h(g)=h(d)+1$, donc $h(t)=h(g)+1=h(d)+2$.\\
+À noter que $g$ et $d$ sont minimaux, donc l'hypothèse d'induction est supposée vérifiée sur les fils de $t$.
+\begin{flalign*}
+&\begin{aligned}
+n(t)&=n(g)+n(d)+1\\
+&=F_{h(g)+3}-1+F_{h(d)+3}-1+1\hspace{1em}\text{(par hypothèse d'induction)}\\
+&=F_{h(g)+3}+F_{h(d)+3}-1\\
+&=F_{h(t)+2}+F_{h(t)+1}-1\\
+&=F_{h(t)+3}-1\\
+&=n_{h}
+\end{aligned}&&
+\end{flalign*}
+\item Avec la proposition précédente on a que $n(t)=o(F_{h(t)+3}-1)$ donc $n(t)=o(F_{h(t)+3})$ et $F_{h(t)}=O(n(t))$.
+
+Donc, $\dfrac{1}{\sqrt{5}}\left[\bgp{\dfrac{1+\sqrt{5}}{2}}^{h(t)}-\bgp{\dfrac{1-\sqrt{5}}{2}}^{h(t)}\right]=O(n(t))\implies\bgp{\dfrac{1+\sqrt{5}}{2}}^{h(t)}=O(n(t))$.\\
+Une petite approximation donne $\phi=\dfrac{1+\sqrt{5}}{2}\approx 1{,}618034$, donc $\phi<2$.
+
+Donc, $2^{h(t)}=O(n(t))\implies h(t)=O(\log_{2}(n(t)))$, ou plus simplement: $h=O(\log_{2}(n))$.
+\item Repartons de l'expression trouvée un peu avant, cette fois-ci en gardant la constante multiplicative:
+\eqencld{\dfrac{1}{\sqrt{5}}\bgp{\dfrac{1+\sqrt{5}}{2}}^{H(t)}=O(n(t))}
+\eqencld{\implies\dfrac{1}{\sqrt{5}}\phi^{H(n)}=O(n),\hspace{1em}\phi=\dfrac{1+\sqrt{5}}{2}}
+\eqencld{\implies H(n)=\dfrac{1}{\log_{2}(\phi)}\log_{2}(n)+c,\hspace{1em}c\in\mathbb{R}}
+On trouve alors, en approximant, que $\dfrac{1}{\log_{2}(\phi)}=1{,}44042=\alpha$.
+\item La hauteur d'un arbre de recherche AVL sera toujours inférieure à celle de son équivalent Rouge-Noir, ainsi on peut supposer par exemple que la recherche sera plus rapide.
+\item Puisque par définition un arbre AVL est un arbre de recherche, une méthode plus adaptée est possible.
+\inputminted[fontsize=\small,firstline=25,lastline=27]{ocaml}{part2.ml}
+\item Dans le pire cas l'élément recherché n'est pas dans l'arbre, dans ce cas l'algorithme parcourt tout l'arbre jusqu'à atteindre une feuille.\\
+En supposant que cette feuille est au dernier étage il faut parcourir $h$ noeuds, donc l'algorithme est en $O(log_{2}(n))$.
+\item On peut exploiter la variable de déséquilibre, celle-ci indique quel sous-arbre est prépondérant et on peut donc omettre une branche entière pendant le parcours.
+\inputminted[fontsize=\small,firstline=28,lastline=30]{ocaml}{part2.ml}
+\end{enumerate}
+
+\section{Rééquilibrage par rotations}
+
+\begin{enumerate}
+\setcounter{enumi}{14}
+\item Observons l'état de l'arbre après une rotation droite.
+\begin{center}
+\begin{tikzpicture}[
+inner/.style={circle,draw,minimum width=7mm,inner sep=0},
+leaf/.style={isosceles triangle,draw,shape border rotate=90,isosceles triangle stretches=true, minimum height=10mm,minimum width=12mm,inner sep=0,yshift={-5mm},font=\footnotesize},
+large leaf/.style={leaf,minimum height=30mm,yshift={-13.4mm}},
+level 1/.style={sibling distance=30mm},
+level 2/.style={sibling distance=21mm},
+level 3/.style={sibling distance=14mm},
+]
+\node[inner] {$y$}
+[child anchor=north]
+child {
+    node[large leaf] {$A$}
+}
+child {
+    node[inner] {$x$}
+    child {
+        node[large leaf] {$B$}
+    }
+    child {
+        node[leaf] {$C$}
+    }
+};
+\draw[dotted,line width=0.3mm] (-3.25,-3.81) -- (4.25,-3.81) node[right] {$1$};
+\draw[dotted,line width=0.3mm] (-3.25,-5.3) -- (4.25,-5.3) node[right] {$2$};
+\end{tikzpicture}
+\end{center}
+Le sous-arbre $C$ gagne un niveau, le sous-arbre $A$ en perd un et le $B$ ne change pas de niveau. Et puisqu'une rotation conserve l'arrangement d'un ABR, la qualité AVL est restaurée.
+\item À nouveau, observons l'arbre initial puis son état après la même procédure de rotation.
+\begin{center}
+\begin{tikzpicture}[
+inner/.style={circle,draw,minimum width=7mm,inner sep=0},
+leaf/.style={isosceles triangle,draw,shape border rotate=90,isosceles triangle stretches=true, minimum height=10mm,minimum width=12mm,inner sep=0,yshift={-5mm},font=\footnotesize},
+large leaf/.style={leaf,minimum height=30mm,yshift={-13.4mm}},
+level 1/.style={sibling distance=30mm},
+level 2/.style={sibling distance=21mm},
+level 3/.style={sibling distance=14mm},
+]
+\node[inner] {$x$}
+[child anchor=north]
+child {
+    node[inner] {$y$}
+    child {
+        node[large leaf] {$A$}
+    }
+    child {
+        node[leaf] {$B$}
+    }
+}
+child {
+    node[leaf] {$C$}
+};
+\draw[dotted,line width=0.3mm] (-3.25,-2.3) -- (4.25,-2.3) node[right] {$0$};
+\draw[dotted,line width=0.3mm] (-3.25,-3.81) -- (4.25,-3.81) node[right] {$1$};
+\draw[dotted,line width=0.3mm] (-3.25,-5.3) -- (4.25,-5.3) node[right] {$2$};
+\end{tikzpicture}
+\end{center}
+Puis on effectue la rotation:
+\begin{center}
+\begin{tikzpicture}[
+inner/.style={circle,draw,minimum width=7mm,inner sep=0},
+leaf/.style={isosceles triangle,draw,shape border rotate=90,isosceles triangle stretches=true, minimum height=10mm,minimum width=12mm,inner sep=0,yshift={-5mm},font=\footnotesize},
+large leaf/.style={leaf,minimum height=30mm,yshift={-13.4mm}},
+level 1/.style={sibling distance=30mm},
+level 2/.style={sibling distance=21mm},
+level 3/.style={sibling distance=14mm},
+]
+\node[inner] {$y$}
+[child anchor=north]
+child {
+    node[large leaf] {$A$}
+}
+child {
+    node[inner] {$x$}
+    child {
+        node[leaf] {$B$}
+    }
+    child {
+        node[leaf] {$C$}
+    }
+};
+\draw[dotted,line width=0.3mm] (-3.25,-3.81) -- (4.25,-3.81) node[right] {$1$};
+\end{tikzpicture}
+\end{center}
+\item\begin{enumerate}[label=\alph*)]
+\item Supposons que le sous-arbre $D$ a une hauteur $h_{D}$, $x$ a un déséquilibre de $-2$ donc $y$ a une hauteur notée $h_{y}=h_{D}+2$. $y$ a lui-même un déséquilibre de $+1$ donc
+$h_{y}=h_{z}+1$, ainsi on obtient que $h_{z}=h_{D}+1$, et donc nécessairement $h_{A}=h_{D}$.
+
+On se retrouve bien dans la situation exposée dans l'énoncé. Par ailleurs, tant que le sous-arbre $z$ respecte les conditions précédentes, son déséquilibre n'importe pas.
+\item L'arbre peut être rééquilibré par une rotation gauche:
+\begin{center}
+\begin{tikzpicture}[
+inner/.style={circle,draw,minimum width=7mm,inner sep=0},
+leaf/.style={isosceles triangle,draw,shape border rotate=90,isosceles triangle stretches=true, minimum height=10mm,minimum width=12mm,inner sep=0,yshift={-5mm},font=\footnotesize},
+large leaf/.style={leaf,minimum height=30mm,yshift={-13.4mm}},
+level 1/.style={sibling distance=30mm},
+level 2/.style={sibling distance=21mm},
+level 3/.style={sibling distance=14mm},
+]
+\node[inner] {$x$}
+[child anchor=north]
+child {
+    node[inner] {$z$}
+    child {
+        node[inner] {$y$}
+        child {
+            node[leaf] {$A$}
+        }
+        child {
+            node[large leaf] {$B$}
+        }
+    }
+    child {
+        node[leaf] {$C$}
+    }
+}
+child {
+    node[leaf] {$D$}
+};
+\draw[dotted,line width=0.3mm] (-4.25,-2.31) -- (4.25,-2.31) node[right] {$0$};
+\draw[dotted,line width=0.3mm] (-4.25,-3.81) -- (4.25,-3.81) node[right] {$1$};
+\draw[dotted,line width=0.3mm] (-4.25,-5.31) -- (4.25,-5.31) node[right] {$2$};
+\draw[dotted,line width=0.3mm] (-4.25,-6.81) -- (4.25,-6.81) node[right] {$3$};
+\end{tikzpicture}
+\end{center}
+Puis par une rotation droite sur la racine:
+\begin{center}
+\begin{tikzpicture}[
+inner/.style={circle,draw,minimum width=7mm,inner sep=0},
+leaf/.style={isosceles triangle,draw,shape border rotate=90,isosceles triangle stretches=true, minimum height=10mm,minimum width=12mm,inner sep=0,yshift={-5mm},font=\footnotesize},
+large leaf/.style={leaf,minimum height=30mm,yshift={-13.4mm}},
+level 1/.style={sibling distance=30mm},
+level 2/.style={sibling distance=17mm},
+level 3/.style={sibling distance=14mm},
+]
+\node[inner] {$z$}
+[child anchor=north]
+child {
+    node[inner] {$y$}
+    child {
+        node[leaf] {$A$}
+    }
+    child {
+        node[large leaf] {$B$}
+    }
+}
+child {
+    node[inner] {$x$}
+    child {
+        node[leaf] {$C$}
+    }
+    child {
+        node[leaf] {$D$}
+    }
+};
+\draw[dotted,line width=0.3mm] (-4.25,-2.31) -- (4.25,-2.31) node[right] {$0$};
+\draw[dotted,line width=0.3mm] (-4.25,-3.81) -- (4.25,-3.81) node[right] {$1$};
+\draw[dotted,line width=0.3mm] (-4.25,-5.31) -- (4.25,-5.31) node[right] {$2$};
+\end{tikzpicture}
+\end{center}
+\item\begin{enumerate}[label=-]
+\item$\delta^{'}_{x}=\begin{cases}
+1 & \text{si }\delta^{'}_{z}=-1\\
+0 & \text{sinon}
+\end{cases}$
+\item$\delta^{'}_{y}=\begin{cases}
+-1 & \text{si }\delta^{'}_{z}=1\\
+0 & \text{sinon}
+\end{cases}$
+\item$\delta^{'}_{z}=0$
+\end{enumerate}
+\end{enumerate}
+\item On note $h$ la hauteur initiale et $h^{'}$ la hauteur après rééquilibrage.
+\begin{enumerate}[label=\arabic*)]
+\item Si $\delta_{y}=0$ alors $h^{'}=h$.
+\item Si $\delta_{y}=-1$ alors $h^{'}=h-1$.
+\item Si $\delta_{y}=+1$ et $\delta_{z}\in\bgbr{-1,0,+1}$ alors $h^{'}=h-1$.
+\end{enumerate}
+\end{enumerate}
+
+\section{Insertion dans un arbre AVL}
+
+\begin{enumerate}
+\setcounter{enumi}{18}
+\item Voici l'arbre après insertion de $22$ avec une rotation droite sur le noeud $25$.
+\begin{center}
+\begin{tikzpicture}[
+inner/.style={circle,draw,minimum width=7mm,inner sep=0},
+level 1/.style={sibling distance=40mm},
+level 2/.style={sibling distance=20mm},
+level 3/.style={sibling distance=30mm},
+level 4/.style={sibling distance=15mm}
+]
+\node[inner] {$30$}
+child {
+    node[inner] {$20$}
+    child {
+        node[inner] {$10$}
+        child {
+            node[inner] {$3$}
+        }
+        child[missing]
+    }
+    child {
+        node[inner] {$23$}
+        child {
+            node[inner] {$21$}
+            child[missing]
+            child {
+                node[inner] {$22$}
+            }
+        }
+        child {
+            node[inner] {$25$}
+            child {
+                node[inner] {$24$}
+            }
+            child {
+                node[inner] {$29$}
+            }
+        }
+    }
+}
+child {
+    node[inner] {$40$}
+    child {
+        node[inner] {$35$}
+        child[missing]
+        child {
+            node[inner] {$37$}
+        }
+    }
+    child {
+        node[inner] {$50$}
+    }
+};
+\end{tikzpicture}
+\end{center}
+Puis après l'insertion de $26$ avec une rotation droite sur le noeud $20$.
+\begin{center}
+\begin{tikzpicture}[
+inner/.style={circle,draw,minimum width=7mm,inner sep=0},
+level 1/.style={sibling distance=45mm},
+level 2/.style={sibling distance=30mm},
+level 3/.style={sibling distance=15mm},
+level 4/.style={sibling distance=15mm}
+]
+\node[inner] {$30$}
+child {
+    node[inner] {$23$}
+    child {
+        node[inner] {$20$}
+        child {
+            node[inner] {$10$}
+            child {
+                node[inner] {$3$}
+            }
+            child[missing]
+        }
+        child {
+            node[inner] {$21$}
+            child[missing]
+            child {
+                node[inner] {$22$}
+            }
+        }
+    }
+    child {
+        node[inner] {$25$}
+        child {
+            node[inner] {$24$}
+        }
+        child {
+            node[inner] {$29$}
+            child {
+                node[inner] {$26$}
+            }
+            child[missing]
+        }
+    }
+}
+child {
+    node[inner] {$40$}
+    child {
+        node[inner] {$35$}
+        child[missing]
+        child {
+            node[inner] {$37$}
+        }
+    }
+    child {
+        node[inner] {$50$}
+    }
+};
+\end{tikzpicture}
+\end{center}
+Et enfin après insertion de $27$ avec deux rotations (gauche-droite) sur le noeud $29$.
+\begin{center}
+\begin{tikzpicture}[
+inner/.style={circle,draw,minimum width=7mm,inner sep=0},
+level 1/.style={sibling distance=45mm},
+level 2/.style={sibling distance=30mm},
+level 3/.style={sibling distance=15mm},
+level 4/.style={sibling distance=15mm}
+]
+\node[inner] {$30$}
+child {
+    node[inner] {$23$}
+    child {
+        node[inner] {$20$}
+        child {
+            node[inner] {$10$}
+            child {
+                node[inner] {$3$}
+            }
+            child[missing]
+        }
+        child {
+            node[inner] {$21$}
+            child[missing]
+            child {
+                node[inner] {$22$}
+            }
+        }
+    }
+    child {
+        node[inner] {$25$}
+        child {
+            node[inner] {$24$}
+        }
+        child {
+            node[inner] {$27$}
+            child {
+                node[inner] {$26$}
+            }
+            child {
+                node[inner] {$29$}
+            }
+        }
+    }
+}
+child {
+    node[inner] {$40$}
+    child {
+        node[inner] {$35$}
+        child[missing]
+        child {
+            node[inner] {$37$}
+        }
+    }
+    child {
+        node[inner] {$50$}
+    }
+};
+\end{tikzpicture}
+\end{center}
+\item Posons l'hypothèse d'induction suivante pour un arbre AVL de taille $n$:
+\eqencld{H(n):\ \text{\guillemotleft Après insertion d'un noeud, la hauteur reste la même ou est incrémentée.\guillemotright}}
+Pour la preuve on note $h$ la hauteur de l'arbre avant insertion et $h^{'}$ la hauteur de l'arbre après insertion.
+
+\textsl{\textcolor{blue}{\underline{Initialisation}:}}\\
+Les cas $n=0$ et $n=1$ sont triviaux car on a toujours $h^{'}=h+1$.
+
+\textsl{\textcolor{blue}{\underline{Induction}:}}\\
+Supposons que $n>1$, il y a deux cas à considérer:
+\begin{enumerate}[label=-]
+\item Après insertion, l'arbre est équilibré. Alors aucune rotation n'est nécessaire, par induction les deux sous-arbres sont de taille $h$ ou $h-1$, donc $h^{'}\in\bgbr{h,h+1}$.
+\item Après insertion, l'arbre est déséquilibré. Alors il faut effectuer une ou plusieurs rotations. Puisque l'arbre est désormais équilibré on revient au cas précédent.
+\end{enumerate}
+\item Les cas $2$ et $5$ ne sont pas possibles.
+\item Après insertion, et même après les rotations, les noeuds parents gardent leurs facteurs de déséquilibre, donc l'insertion initiale est la seule contrainte en temps.
+\item Sachant que la hauteur d'un arbre AVL est en $\log(n)$ alors l'insertion est en compléxité logarithmique également.
+\item On couvre les cinq cas, ce qui donne:
+\inputminted[fontsize=\small,firstline=31,lastline=37]{ocaml}{part4.ml}
+\item Il suffit de permuter les fils, et la procédure est la même:
+\inputminted[fontsize=\small,firstline=38,lastline=44]{ocaml}{part4.ml}
+\end{enumerate}
+
+\end{document}

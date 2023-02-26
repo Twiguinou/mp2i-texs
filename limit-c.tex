@@ -1,0 +1,54 @@
+\documentclass[article,11pt]{article}
+\usepackage[a4paper,total={7in,10in}]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\usepackage{amsmath}
+\usepackage{bbold}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{parskip}
+\usepackage[math]{cellspace}
+\usepackage[french]{babel}
+\setlength{\cellspacetoplimit}{3pt}
+\setlength{\cellspacebottomlimit}{3pt}
+\definecolor{vlightgray}{rgb}{0.9,0.9,0.9}
+\usepackage[T1]{fontenc}
+
+\DeclareMathSymbol{\shortminus}{\mathbin}{AMSa}{"39}
+\newcommand{\eqencld}[1]{
+    \begin{equation*}#1\end{equation*}
+}
+\newcommand{\bgp}[1]{
+    \left(#1\right)
+}
+\newcommand{\bgbr}[1]{
+    \left\{#1\right\}
+}
+\newcommand{\fabs}[1]{
+    \left|#1\right|
+}
+
+\begin{document}
+
+Trouver, si elle existe: $\underset{x\rightarrow0}{\lim}\ \dfrac{e^{\tan(x)}-e^{\sin(x)}}{\tan(x)-\sin(x)}$
+
+On va se servir des propositions suivantes:
+\eqencld{\tan(x)\underset{0}{\sim}x+\dfrac{x^{3}}{3}\text{ et }\sin(x)\underset{0}{\sim}x-\dfrac{x^{3}}{6}}
+Dès lors:
+\eqencld{\dfrac{e^{\tan(x)}-e^{\sin(x)}}{\tan(x)-\sin(x)}\ \underset{0}{\sim}\ 2e^{x}\dfrac{e^{\frac{x^{3}}{3}}-e^{-\frac{x^{3}}{6}}}{x^{3}}}
+Or on remarque que $e^{\frac{x^{3}}{3}}-e^{-\frac{x^{3}}{6}}\xrightarrow[x\rightarrow0]{}0$ et que $x^{3}\xrightarrow[x\rightarrow0]{}0$, on peut alors appliquer
+la règle de l'Hôpital sur notre expression précédente.
+\begin{flalign*}
+&\begin{aligned}
+\underset{x\rightarrow0}{\lim}\ \dfrac{e^{\frac{x^{3}}{3}}-e^{-\frac{x^{3}}{6}}}{x^{3}}&=\underset{x\rightarrow0}{\lim}\ \dfrac{x^{2}e^{\frac{x^{3}}{3}}+\frac{x^{2}}{2}e^{-\frac{x^{3}}{6}}}{3x^{2}}\\
+&=\underset{x\rightarrow0}{\lim}\ \dfrac{e^{\frac{x^{3}}{3}}+\frac{1}{2}e^{-\frac{x^{3}}{6}}}{3}\\
+&=\dfrac{1}{2}
+\end{aligned}&&
+\end{flalign*}
+On peut donc dire que $\underset{x\rightarrow0}{\lim}\ \dfrac{e^{\tan(x)}-e^{\sin(x)}}{\tan(x)-\sin(x)}=\underset{x\rightarrow0}{\lim}\ 2e^{x}\dfrac{e^{\frac{x^{3}}{3}}-e^{-\frac{x^{3}}{6}}}{x^{3}}=1$.
+
+\end{document}

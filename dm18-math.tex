@@ -1,0 +1,92 @@
+\documentclass[article,11pt]{article}
+\usepackage[a4paper,total={7in,10in}]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{calc,arrows.meta,shapes.geometric,fit,matrix,positioning}
+\usepackage{amsmath}
+\usepackage{bbold}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{parskip}
+\usepackage[math]{cellspace}
+\usepackage[french]{babel}
+\setlength{\cellspacetoplimit}{3pt}
+\setlength{\cellspacebottomlimit}{3pt}
+\definecolor{vlightgray}{rgb}{0.9,0.9,0.9}
+\usepackage[T1]{fontenc}
+
+\DeclareMathSymbol{\shortminus}{\mathbin}{AMSa}{"39}
+\newcommand{\eqencld}[1]{
+    \begin{equation*}#1\end{equation*}
+}
+\newcommand{\bgp}[1]{
+    \left(#1\right)
+}
+\newcommand{\bgbr}[1]{
+    \left\{#1\right\}
+}
+\newcommand{\fabs}[1]{
+    \left|#1\right|
+}
+
+\begin{document}
+
+\title{Devoir Maison 18 : Sous-espaces vectoriels\vspace{-.75em}}
+\author{Aksil Mammar}
+\date{}
+\maketitle
+
+\section{Introduction}
+
+\begin{enumerate}
+\item\begin{enumerate}
+\item Puisque $A$ et $B$ sont des sous-espaces vectoriels de $E$ alors $A\cap B$ également.
+Et $A\cap B\subset B$ donc il existe $C\subset B$ un sous-espace vectoriel de $E$ tel que $C\oplus\bgp{A\cap B}=B$.
+
+Procédons ensuite par double inclusion:
+\begin{enumerate}[label=-]
+\item Soit $u\in A\oplus C,\ \exists!(v,w)\in A\times C,\ u=v+w$, et $C\subset B$ donc $w\in B$, donc $u\in A+B$.
+\item Soit $u\in A+B,\ \exists(v,w)\in A\times B,\ u=v+w$, on sait que $C\oplus\bgp{A\cap B}=B$ donc $\exists!(x,y)\in C\times\bgp{A\cap B},\ w=x+y$.\\
+Ainsi, $u=v+x+y=(v+y)+x$, avec $v+y\in A$ et $y\in C$, donc $u\in A\oplus C$.
+\end{enumerate}
+Donc, par double inclusion, $A\oplus C=A+B$.
+\item Développons l'expression suivante:
+\begin{flalign*}
+&\begin{aligned}
+\dim\bgp{A+B}&=\dim\bgp{A\oplus C}\\
+&=\dim\bgp{A}+\dim\bgp{C}
+\end{aligned}&&
+\end{flalign*}
+Or on sait que $C\oplus\bgp{A\cap B}=B$ donc $\dim\bgp{C}=\dim\bgp{B}-\dim\bgp{A\cap B}$.
+\eqencld{\dim\bgp{A+B}=\dim\bgp{A}+\dim\bgp{B}-\dim\bgp{A\cap B}}
+\end{enumerate}
+\item\begin{enumerate}
+\item Le vecteur $x$ n'est pas dans $A$ donc il ne peut pas être écrit comme une combinaison linéaire des vecteurs $A$.\\
+Posons $\dim\bgp{A}=n$, $\bgp{a_{1},...,a_{n}}$ une base de $A$, on peut alors écrire $\bgp{a_{1},...,a_{n},x}$ une base de $\mathrm{Vect}\bgp{A\cup\bgbr{x}}$.
+
+Ainsi, tout vecteur de $\mathrm{Vect}\bgp{A\cup\bgbr{x}}$ est une combinaison linéaire, unique, des $\bgbr{a_{1},...,a_{n}}$ et de $x$.
+Donc on en déduit que:
+\begin{flalign*}
+&\begin{aligned}
+\mathrm{Vect}\bgp{A\cup\bgbr{x}}&=\bgbr{\lambda_{1}a_{1}+...+\lambda_{n}a_{n}+\lambda x,\ \bgp{\lambda_{1},...,\lambda_{n},\lambda}\in\mathbb{K}^{n+1}}\\
+&=\bgbr{a+\lambda x,\ \bgp{a,\lambda}\in A\times\mathbb{K}}
+\end{aligned}&&
+\end{flalign*}
+\item$\bgp{a_{1},...,a_{n},x}$ est une base de $\mathrm{Vect}\bgp{A\cup\bgbr{x}}$ de dimension $n+1=\dim\bgp{A}+1$.
+\end{enumerate}
+\item Soit $n=\dim\bgp{E}$, on ne se préoccupe pas du cas $n=0$, alors puisque $A$ et $B$ sont des hyperplans de $E$, $\dim\bgp{A}=\dim\bgp{B}=n-1$.\\
+Avec la formule de Grassman, $\dim\bgp{A\cap B}=2n-2-\dim\bgp{A+B}$.
+
+Aussi $A+B=E$ car $A$ et $B$ sont distincts, donc $\dim\bgp{A+B}=\dim\bgp{E}=n$, donc en reformulant:
+\eqencld{\dim\bgp{A\cap B}=n-2=\dim\bgp{B}-1}
+Et, puisque $A\cap B\subset B$, alors $A\cap B$ est un hyperplan de $B$.
+\item Posons avant tout $n=\dim\bgp{E}$, il y a trois cas à considérer, on suppose que $n>0$.
+\begin{enumerate}[label=-]
+\item Si $\dim\bgp{A}=n-1$ alors $A$ est un hyperplan donc c'est bon.
+\item Si $\dim\bgp{A}=k<n-1$, soit $\bgp{a_{1},...,a_{k}}$ une base de $A$, on peut la compléter de $n-k-1$ vecteurs pour former un hyperplan de $E$, qui contient donc $A$.
+\end{enumerate}
+\end{enumerate}
+
+\end{document}
